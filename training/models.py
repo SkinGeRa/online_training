@@ -9,6 +9,12 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='training/', verbose_name='Превью', **NULLABLE)
     description = models.TextField(verbose_name='Описание', **NULLABLE)
 
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма оплаты', default=50)
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+                              verbose_name='Пользователь', **NULLABLE)
+
+
     def __str__(self):
         return f'{self.title}'
 
@@ -22,6 +28,12 @@ class Lesson(models.Model):
     description = models.TextField(verbose_name='Описание', **NULLABLE)
     preview = models.ImageField(upload_to='training/', verbose_name='Превью', **NULLABLE)
     video_url = models.URLField(max_length=250, verbose_name='Ссылка на видео', **NULLABLE)
+
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма оплаты', default=50)
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+                              verbose_name='Пользователь', **NULLABLE)
 
     def __str__(self):
         return f'{self.title}'

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'users',
     'training',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -140,9 +141,19 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 4,
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+LOGIN_URL = '/users/'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = '465'
+EMAIL_HOST_USER = 'noreply@oscarbot.ru'
+EMAIL_HOST_PASSWORD = 'AsTSNVv7pun9'
+EMAIL_USE_SSL = True

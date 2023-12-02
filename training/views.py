@@ -4,15 +4,18 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from training.models import Course, Lesson, Payment
+from training.models import Course, Lesson, Subscription
+from training.paginators import CoursePaginator
 from training.permissions import IsModerator, IsOwner
-from training.serializers import CourseSerializer, LessonSerializer, PaymentsSerializer, CourseCreateSerializer
+from training.serializers import CourseSerializer, LessonSerializer, CourseCreateSerializer, SubscriptionSerializer
+from training.services import send_sub_message
 
 
 class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
     permission_classes = [IsAuthenticated | IsModerator | IsOwner]
+    pagination_class = CoursePaginator
 
     def create(self, request, *args, **kwargs):
         serializer = CourseCreateSerializer(data=request.data)
@@ -37,6 +40,7 @@ class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated | IsModerator | IsOwner]
+    pagination_class = CoursePaginator
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
@@ -56,10 +60,18 @@ class LessonDestroyAPIView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated | IsOwner]
 
 
-class PaymentsListAPIView(generics.ListAPIView):
-    serializer_class = PaymentsSerializer
-    queryset = Payment.objects.all()
+class SubscriptionCreateAPIView(generics.CreateAPIView):
+    serializer_class = SubscriptionSerializer
+    permission_classes = [IsAuthenticated | IsModerator | IsOwner]
 
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ('lesson', 'course', 'payment_method',)
-    ordering_fields = ('payment_date',)
+    def perform_create(self, serializer):
+        new_sub = serializer.save()
+        new_sub.user = self.request.user
+        new_sub.save()
+        send_sub_message(new_sub.user.email, new_sub.course.title)
+
+
+class SubscriptionDestroyAPIView(generics.DestroyAPIView):
+    serializer_class = SubscriptionSerializer
+    queryset = Subscription.objects.all()
+    permission_classes = [IsAuthenticated | IsModerator | IsOwner]

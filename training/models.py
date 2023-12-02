@@ -9,11 +9,8 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='training/', verbose_name='Превью', **NULLABLE)
     description = models.TextField(verbose_name='Описание', **NULLABLE)
 
-    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма оплаты', default=50)
-
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                               verbose_name='Пользователь', **NULLABLE)
-
 
     def __str__(self):
         return f'{self.title}'
@@ -29,8 +26,6 @@ class Lesson(models.Model):
     preview = models.ImageField(upload_to='training/', verbose_name='Превью', **NULLABLE)
     video_url = models.URLField(max_length=250, verbose_name='Ссылка на видео', **NULLABLE)
 
-    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма оплаты', default=50)
-
     course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                               verbose_name='Пользователь', **NULLABLE)
@@ -43,25 +38,16 @@ class Lesson(models.Model):
         verbose_name_plural = 'Уроки'
 
 
-class Payment(models.Model):
-    PAYMENT_METHOD_CHOICES = (
-        ('CASH', 'Наличные'),
-        ('BANK_TRANSFER', 'Перевод на счет'),
-    )
+class Subscription(models.Model):
+    is_active = models.BooleanField(default=True, verbose_name='Подписка')
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
-    payment_date = models.DateTimeField(verbose_name='Дата оплаты', **NULLABLE)
-
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, verbose_name='Оплаченный урок', **NULLABLE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Оплаченный курс', **NULLABLE)
-
-    amount = models.PositiveSmallIntegerField(verbose_name='Сумма оплаты')
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, verbose_name='Cпособ оплаты',
-                                      default='BANK_TRANSFER')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс', **NULLABLE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь',
+                             **NULLABLE)
 
     def __str__(self):
-        return f'{self.user} {self.amount} {self.payment_method}'
+        return f'{self.course} {self.user} ({self.is_active})'
 
     class Meta:
-        verbose_name = 'Платеж'
-        verbose_name_plural = 'Платежи'
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'

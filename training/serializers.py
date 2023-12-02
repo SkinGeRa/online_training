@@ -4,7 +4,7 @@ from rest_framework.fields import SerializerMethodField
 from training.models import Course, Lesson, Payment
 
 
-class CourseSerializer(serializers.ModelSerializer):
+class CourseCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course

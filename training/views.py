@@ -27,6 +27,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
+    """ Создание урока """
     serializer_class = LessonSerializer
     permission_classes = [IsOwner]
 
@@ -37,6 +38,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 
 class LessonListAPIView(generics.ListAPIView):
+    """ Просмотр списка уроков """
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated | IsModerator | IsOwner]
@@ -44,23 +46,27 @@ class LessonListAPIView(generics.ListAPIView):
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
+    """ Просмотр урока """
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated | IsModerator | IsOwner]
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
+    """ Изменение урока """
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated | IsModerator | IsOwner]
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
+    """ Удаление урока """
     queryset = Lesson.objects.all()
     permission_classes = [IsAuthenticated | IsOwner]
 
 
 class SubscriptionCreateAPIView(generics.CreateAPIView):
+    """ Создание подписки """
     serializer_class = SubscriptionSerializer
     permission_classes = [IsAuthenticated | IsModerator | IsOwner]
 
@@ -72,6 +78,7 @@ class SubscriptionCreateAPIView(generics.CreateAPIView):
 
 
 class SubscriptionDestroyAPIView(generics.DestroyAPIView):
+    """ Удаление подписки """
     serializer_class = SubscriptionSerializer
     queryset = Subscription.objects.all()
     permission_classes = [IsAuthenticated | IsModerator | IsOwner]

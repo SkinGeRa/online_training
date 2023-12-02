@@ -20,6 +20,7 @@ class Payment(models.Model):
     amount = models.PositiveSmallIntegerField(verbose_name='Сумма оплаты')
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, verbose_name='Cпособ оплаты',
                                       default='BANK_TRANSFER')
+    stripe_id = models.CharField(max_length=300, verbose_name='stripe_id', **NULLABLE)
 
     def __str__(self):
         return f'{self.user} {self.amount} {self.payment_method}'
@@ -27,3 +28,4 @@ class Payment(models.Model):
     class Meta:
         verbose_name = 'Платеж'
         verbose_name_plural = 'Платежи'
+

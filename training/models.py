@@ -32,7 +32,7 @@ class Lesson(models.Model):
 
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма оплаты', default=50)
 
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
+    # course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Курс')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
                               verbose_name='Пользователь', **NULLABLE)
 

@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -98,9 +99,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
      'default': {
          'ENGINE': 'django.db.backends.postgresql',
-         'NAME': 'online_training',
-         'USER': 'postgres',
-         'PASSWORD': '12345',
+         'NAME': os.getenv('POSTGRES_DB'),
+         'USER': os.getenv('POSTGRES_USER'),
+         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
          'HOST': 'db'
      }
  }
